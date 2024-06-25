@@ -7,12 +7,18 @@ namespace Client
 {
     sealed class EcsStartup : MonoBehaviour
     {
+        [SerializeField]
+        private SceneData sceneData;
+
         EcsWorld _world;
         EcsSystems _updateSystems;
         EcsSystems _fixedUpdateSystems;
 
-        [SerializeField]
-        private SceneData sceneData;
+        EcsSystems _playerSystems;
+        EcsSystems _animationSystems;
+        EcsSystems _moveSystems;
+        EcsSystems _stackAddSystem;
+        EcsSystems _stackRemoveSystem;
 
         void Start()
         {
@@ -36,34 +42,32 @@ namespace Client
 
         private void BuildSystems()
         {
-            var playerSystems = new EcsSystems(_world)
+            _playerSystems = new EcsSystems(_world)
                 .Add(new PlayerInputSystem())
                 .Add(new CameraFollowPlayerSystem());
 
-            var animationSystems = new EcsSystems(_world)
+            _animationSystems = new EcsSystems(_world)
                 .Add(new AnimationMoveSystem())
                 .Add(new AnimationIdleSystem())
                 .Add(new AnimationPlaySystem());
 
-            var moveSystems = new EcsSystems(_world)
+            _moveSystems = new EcsSystems(_world)
                 .Add(new MoveRigidbodySystem())
                 .Add(new RotateRigidbodySystem())
                 .Add(new MoveTransformSystem())
                 .Add(new RotateTransformSystem());
-
-            _updateSystems.Inject(sceneData).Add(playerSystems);
-            _fixedUpdateSystems
-                .Inject(sceneData)
-                .Add(moveSystems)
-                .Add(animationSystems)
-                .OneFrame<MoveTag>()
-                .OneFrame<RotateTag>();
         }
 
         private void InitSystems()
         {
-            _updateSystems.Init();
-            _fixedUpdateSystems.Init();
+            _updateSystems.Inject(sceneData).Add(_playerSystems).Init();
+            _fixedUpdateSystems
+                .Inject(sceneData)
+                .Add(_moveSystems)
+                .Add(_animationSystems)
+                .OneFrame<MoveTag>()
+                .OneFrame<RotateTag>()
+                .Init();
         }
 
         void Update()
