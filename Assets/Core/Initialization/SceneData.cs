@@ -5,6 +5,7 @@ public class SceneData : MonoBehaviour
 {
     public PrefabFactory Factory;
 
-    public EcsUiEmitter uiEmitter;
-    public Assets asset;
+    public EcsUiEmitter UIEmitter;
+    public Assets Asset;
+    public Transform PancakesParent;
 }

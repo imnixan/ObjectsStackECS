@@ -10,6 +10,9 @@ namespace Client
         [SerializeField]
         private SceneData sceneData;
 
+        [SerializeField]
+        private UIData uiData;
+
         EcsWorld _world;
         EcsSystems _updateSystems;
         EcsSystems _fixedUpdateSystems;
@@ -19,6 +22,8 @@ namespace Client
         EcsSystems _moveSystems;
         EcsSystems _stackAddSystem;
         EcsSystems _stackRemoveSystem;
+        EcsSystems _worldSystem;
+        EcsSystems _uiSystem;
 
         void Start()
         {
@@ -42,12 +47,21 @@ namespace Client
 
         private void BuildSystems()
         {
+            _worldSystem = new EcsSystems(_world)
+                .Add(new SpawnSystem())
+                .Add(new SpawnPancakesSystem());
+
             _playerSystems = new EcsSystems(_world)
                 .Add(new PlayerInputSystem())
                 .Add(new CameraFollowPlayerSystem())
                 .Add(new TryMoveToUnloadingZone())
                 .Add(new TryLeaveUnloadinZone())
                 .Add(new TryPickupItem())
+                .Add(new AddPancakeSystem())
+                .OneFrame<StackAddEvent>()
+                .Add(new UnloadSystem())
+                .Add(new RemovePancakeSystem())
+                .OneFrame<StackRemoveEvent>()
                 .OneFrame<OnTriggerEnterEvent>()
                 .OneFrame<OnTriggerExitEvent>()
                 .OneFrame<OnCollisionEnterEvent>();
@@ -62,11 +76,20 @@ namespace Client
                 .Add(new RotateRigidbodySystem())
                 .Add(new MoveTransformSystem())
                 .Add(new RotateTransformSystem());
+
+            _uiSystem = new EcsSystems(_world).Inject(uiData).Add(new UiStackCountSystem());
         }
 
         private void InitSystems()
         {
-            _updateSystems.Inject(sceneData).Add(_playerSystems).Add(new DestroySystem()).Init();
+            _updateSystems
+                .Inject(sceneData)
+                .Add(_worldSystem)
+                .Add(_playerSystems)
+                .Add(new DestroySystem())
+                .Add(_uiSystem)
+                .Init();
+
             _fixedUpdateSystems
                 .Inject(sceneData)
                 .Add(_moveSystems)

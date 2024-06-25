@@ -12,9 +12,9 @@ public class TryMoveToUnloadingZone : IEcsRunSystem
         {
             ref var entity = ref _playerOnTrigger.GetEntity(index);
             var triggerEvent = entity.Get<OnTriggerEnterEvent>();
-            if (triggerEvent.Collider.CompareTag(_sceneData.asset.UnloadingZone))
+            if (triggerEvent.Collider.CompareTag(_sceneData.Asset.UnloadingZone))
             {
-                Debug.Log("Player in UnloadingZone");
+                entity.Get<OnUnloadTag>();
             }
         }
     }

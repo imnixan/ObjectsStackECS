@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Config/Assets", fileName = "Asset", order = 0)]
 public class Assets : ScriptableObject
@@ -8,4 +9,17 @@ public class Assets : ScriptableObject
 
     public string ItemTag = "Item";
     public string UnloadingZone = "UnloadingZone";
+    public float SpawnTimer;
+
+    public GameObject PancakePrefab;
+    public GameObject PancakeStackPrefab;
+    public Range PancakesXSpawnRange;
+    public Range PancakesZSpawnRange;
+}
+
+[Serializable]
+public struct Range
+{
+    public float min;
+    public float max;
 }

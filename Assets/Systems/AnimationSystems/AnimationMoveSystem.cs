@@ -13,7 +13,7 @@ public class AnimationMoveSystem : IEcsInitSystem, IEcsRunSystem
         foreach (int index in _animatorFilter)
         {
             ref var animator = ref _animatorFilter.Get1(index);
-            var clip = _sceneData.asset.moveAnim;
+            var clip = _sceneData.Asset.moveAnim;
             clip.legacy = true;
             clip.wrapMode = WrapMode.Loop;
             animator.Value.AddClip(clip, MOVE_ANIM);

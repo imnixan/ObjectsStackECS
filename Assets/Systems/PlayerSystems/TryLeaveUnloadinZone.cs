@@ -12,7 +12,10 @@ public class TryLeaveUnloadinZone : IEcsRunSystem
         {
             ref var entity = ref _playerOnTrigger.GetEntity(index);
             var triggerEvent = entity.Get<OnTriggerExitEvent>();
-            if (triggerEvent.Collider.CompareTag(_sceneData.asset.UnloadingZone)) { }
+            if (triggerEvent.Collider.CompareTag(_sceneData.Asset.UnloadingZone))
+            {
+                entity.Del<OnUnloadTag>();
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using Leopotam.Ecs;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class PrefabFactory : MonoBehaviour
 {
@@ -21,7 +22,12 @@ public class PrefabFactory : MonoBehaviour
         var monoEntity = gameObject.GetComponent<MonoEntity>();
         if (monoEntity == null)
             return;
+        var monoLinkComponents = monoEntity.GetComponentsInChildren<MonoLinkBase>();
+
         EcsEntity ecsEntity = _world.NewEntity();
-        monoEntity.Make(ref ecsEntity);
+        foreach (var component in monoLinkComponents)
+        {
+            component.Make(ref ecsEntity);
+        }
     }
 }

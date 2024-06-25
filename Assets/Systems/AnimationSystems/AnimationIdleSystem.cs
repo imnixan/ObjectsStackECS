@@ -13,7 +13,7 @@ public class AnimationIdleSystem : IEcsInitSystem, IEcsRunSystem
         foreach (int index in _filter)
         {
             ref var animator = ref _filter.Get1(index);
-            var clip = _sceneData.asset.idleAnim;
+            var clip = _sceneData.Asset.idleAnim;
             clip.legacy = true;
             clip.wrapMode = WrapMode.Loop;
             animator.Value.AddClip(clip, IDLE_ANIM);
