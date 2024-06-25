@@ -33,6 +33,7 @@ public class AnimationIdleSystem : IEcsInitSystem, IEcsRunSystem
             ref var animator = ref entity.Get<AnimationLink>();
             if (animator.NextAnimation == "")
             {
+                Debug.Log("NEXT EMPTY ON IDLE");
                 if (animator.CurrentAnimation == IDLE_ANIM)
                 {
                     return;

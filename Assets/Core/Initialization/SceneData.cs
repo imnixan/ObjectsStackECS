@@ -1,4 +1,5 @@
 ﻿using Leopotam.Ecs.Ui.Systems;
+using TMPro;
 using UnityEngine;
 
 public class SceneData : MonoBehaviour

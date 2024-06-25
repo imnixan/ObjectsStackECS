@@ -26,7 +26,6 @@ public class AddPancakeSystem : IEcsInitSystem, IEcsRunSystem
             var pickupCount = entity.Get<StackAddEvent>().count;
             var pan = entity.Get<Pan>().pan;
             float yPos = 0.5f + pan.childCount * 0.1f;
-            Debug.Log("Start placing pancakes");
             for (int i = 0; i < pickupCount; i++)
             {
                 _world.NewEntity().Get<SpawnPrefab>() = new SpawnPrefab
@@ -36,7 +35,6 @@ public class AddPancakeSystem : IEcsInitSystem, IEcsRunSystem
                     Rotation = Quaternion.identity,
                     Parent = pan
                 };
-                Debug.Log("Placed" + i + 1);
             }
         }
     }

@@ -34,6 +34,7 @@ public class AnimationMoveSystem : IEcsInitSystem, IEcsRunSystem
             var move = entity.Get<MoveTag>();
             var speed = entity.Get<Speed>();
             animator.Value[MOVE_ANIM].speed = speed.CurrentSpeed / speed.MaxSpeed;
+
             animator.NextAnimation = MOVE_ANIM;
         }
     }

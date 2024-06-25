@@ -40,7 +40,7 @@ public class PlayerInputSystem : IEcsRunSystem
 
             Vector3 newPosition =
                 position.World + direction * (speed.CurrentSpeed * Time.deltaTime);
-            if (newPosition != position.World)
+            if (directionMagnitude > 0.01f)
             {
                 player.Get<MoveTag>();
                 position.World += direction * (speed.CurrentSpeed * Time.deltaTime);

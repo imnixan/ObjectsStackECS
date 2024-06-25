@@ -27,8 +27,6 @@ namespace Client
 
         void Start()
         {
-            // void can be switched to IEnumerator for support coroutines.
-
             _world = new EcsWorld();
             _updateSystems = new EcsSystems(_world);
             _fixedUpdateSystems = new EcsSystems(_world);
@@ -52,7 +50,6 @@ namespace Client
                 .Add(new SpawnPancakesSystem());
 
             _playerSystems = new EcsSystems(_world)
-                .Add(new PlayerInputSystem())
                 .Add(new CameraFollowPlayerSystem())
                 .Add(new TryMoveToUnloadingZone())
                 .Add(new TryLeaveUnloadinZone())
@@ -92,6 +89,7 @@ namespace Client
 
             _fixedUpdateSystems
                 .Inject(sceneData)
+                .Add(new PlayerInputSystem())
                 .Add(_moveSystems)
                 .Add(_animationSystems)
                 .OneFrame<MoveTag>()
