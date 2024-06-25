@@ -30,7 +30,14 @@ public class CameraFollowPlayerSystem : IEcsInitSystem, IEcsRunSystem
             ref var camera = ref _cameraFilter.GetEntity(index);
             var posDiff = camera.Get<PosDiff>();
             ref var cameraPosition = ref camera.Get<Position>();
-            cameraPosition.World = playerPosition.World + posDiff.Value;
+
+            Vector3 newPos = playerPosition.World + posDiff.Value;
+            if (newPos != cameraPosition.World)
+            {
+                camera.Get<MoveTag>();
+
+                cameraPosition.World = newPos;
+            }
         }
     }
 }

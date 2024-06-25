@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MoveRigidbodySystem : IEcsRunSystem
 {
-    private EcsFilter<RigidbodyLink, Position> _filter = null;
+    private EcsFilter<RigidbodyLink, MoveTag> _filter = null;
 
     public void Run()
     {

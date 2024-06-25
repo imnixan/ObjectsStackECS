@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MoveTransformSystem : IEcsRunSystem
 {
-    private EcsFilter<TransformLink, Position> _filter = null;
+    private EcsFilter<TransformLink, MoveTag> _filter = null;
 
     public void Run()
     {

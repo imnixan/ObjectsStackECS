@@ -1,5 +1,6 @@
 ﻿using Leopotam.Ecs;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerInputSystem : IEcsRunSystem
 {
@@ -21,15 +22,30 @@ public class PlayerInputSystem : IEcsRunSystem
             EcsEntity player = _playerFilter.GetEntity(index);
             ref var position = ref player.Get<Position>();
             ref var rotation = ref player.Get<Rotation>();
-            var speed = player.Get<Speed>();
+            ref var speed = ref player.Get<Speed>();
 
             Vector3 direction = new Vector3(joystick.Value.Horizontal, 0, joystick.Value.Vertical);
-            if (direction.sqrMagnitude > 0.01f)
+
+            var directionMagnitude = direction.sqrMagnitude;
+            speed.CurrentSpeed = speed.MaxSpeed * directionMagnitude;
+            Debug.Log("Current speed" + speed.CurrentSpeed);
+            if (directionMagnitude > 0.01f)
             {
-                rotation.World = Quaternion.LookRotation(direction);
+                Quaternion newRotation = Quaternion.LookRotation(direction);
+                if (newRotation != rotation.World)
+                {
+                    player.Get<RotateTag>();
+                    rotation.World = newRotation;
+                }
             }
 
-            position.World += direction * (speed.Value * Time.deltaTime);
+            Vector3 newPosition =
+                position.World + direction * (speed.CurrentSpeed * Time.deltaTime);
+            if (newPosition != position.World)
+            {
+                player.Get<MoveTag>();
+                position.World += direction * (speed.CurrentSpeed * Time.deltaTime);
+            }
         }
     }
 }

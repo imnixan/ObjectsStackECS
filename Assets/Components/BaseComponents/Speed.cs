@@ -4,5 +4,6 @@ using UnityEngine;
 [Serializable]
 public struct Speed
 {
-    public float Value;
+    public float MaxSpeed;
+    public float CurrentSpeed;
 }

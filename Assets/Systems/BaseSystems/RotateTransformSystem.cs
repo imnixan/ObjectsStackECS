@@ -1,9 +1,9 @@
 ﻿using Leopotam.Ecs;
 using UnityEngine;
 
-public class RotateRigidbodySystem : IEcsRunSystem
+public class RotateTransformSystem : IEcsRunSystem
 {
-    private EcsFilter<RigidbodyLink, RotateTag> _filter = null;
+    private EcsFilter<TransformLink, RotateTag> _filter = null;
 
     public void Run()
     {
@@ -15,10 +15,10 @@ public class RotateRigidbodySystem : IEcsRunSystem
         foreach (int index in _filter)
         {
             ref EcsEntity entity = ref _filter.GetEntity(index);
-            ref var rigidbody = ref entity.Get<RigidbodyLink>();
+            ref var transform = ref entity.Get<TransformLink>();
             var newRotation = entity.Get<Rotation>();
 
-            rigidbody.Value.MoveRotation(newRotation.World);
+            transform.Value.rotation = newRotation.World;
         }
     }
 }
