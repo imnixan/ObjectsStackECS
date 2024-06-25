@@ -39,6 +39,8 @@ public class SpawnPancakesSystem : IEcsInitSystem, IEcsRunSystem
                 Parent = spawnPoint
             };
             _lastTime -= _spawnDelay;
+
+            _sceneData.spawnEffect.Play();
         }
     }
 }

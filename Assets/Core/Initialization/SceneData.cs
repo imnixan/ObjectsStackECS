@@ -9,4 +9,6 @@ public class SceneData : MonoBehaviour
     public EcsUiEmitter UIEmitter;
     public Assets Asset;
     public Transform PancakesSpawnPoint;
+
+    public ParticleSystem spawnEffect;
 }
