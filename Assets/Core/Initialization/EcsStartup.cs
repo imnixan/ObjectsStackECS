@@ -21,34 +21,49 @@ namespace Client
             _world = new EcsWorld();
             _updateSystems = new EcsSystems(_world);
             _fixedUpdateSystems = new EcsSystems(_world);
+
 #if UNITY_EDITOR
-            Leopotam.Ecs.UnityIntegration.EcsWorldObserver.Create(_world);
+            Leopotam.Ecs.UnityIntegration.EcsWorldObserver.Create(_world, "World");
             Leopotam.Ecs.UnityIntegration.EcsSystemsObserver.Create(_updateSystems);
             Leopotam.Ecs.UnityIntegration.EcsSystemsObserver.Create(_fixedUpdateSystems);
 
 #endif
             EntityInitializer.InitializeEntities(_world);
 
-            _updateSystems
-                .Add(new PlayerInputSystem())
-                .Add(new CameraFollowPlayerSystem())
-                //.InjectUi(sceneData.uiEmitter)
-                //.OneFrame<EcsUiDragEvent>()
-                .Inject(sceneData)
-                .Init();
+            BuildSystems();
+            InitSystems();
+        }
 
-            _fixedUpdateSystems
+        private void BuildSystems()
+        {
+            var playerSystems = new EcsSystems(_world)
+                .Add(new PlayerInputSystem())
+                .Add(new CameraFollowPlayerSystem());
+
+            var animationSystems = new EcsSystems(_world)
+                .Add(new AnimationMoveSystem())
+                .Add(new AnimationIdleSystem())
+                .Add(new AnimationPlaySystem());
+
+            var moveSystems = new EcsSystems(_world)
                 .Add(new MoveRigidbodySystem())
                 .Add(new RotateRigidbodySystem())
                 .Add(new MoveTransformSystem())
-                .Add(new RotateTransformSystem())
-                .Add(new AnimationMoveSystem())
-                .Add(new AnimationIdleSystem())
-                .Add(new AnimationPlaySystem())
-                .OneFrame<MoveTag>()
-                .OneFrame<RotateTag>()
+                .Add(new RotateTransformSystem());
+
+            _updateSystems.Inject(sceneData).Add(playerSystems);
+            _fixedUpdateSystems
                 .Inject(sceneData)
-                .Init();
+                .Add(moveSystems)
+                .Add(animationSystems)
+                .OneFrame<MoveTag>()
+                .OneFrame<RotateTag>();
+        }
+
+        private void InitSystems()
+        {
+            _updateSystems.Init();
+            _fixedUpdateSystems.Init();
         }
 
         void Update()
