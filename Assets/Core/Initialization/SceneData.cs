@@ -7,5 +7,5 @@ public class SceneData : MonoBehaviour
 
     public EcsUiEmitter UIEmitter;
     public Assets Asset;
-    public Transform PancakesParent;
+    public Transform PancakesSpawnPoint;
 }

@@ -13,8 +13,8 @@ public class Assets : ScriptableObject
 
     public GameObject PancakePrefab;
     public GameObject PancakeStackPrefab;
-    public Range PancakesXSpawnRange;
-    public Range PancakesZSpawnRange;
+
+    public Range PancakesSpawnRange;
 }
 
 [Serializable]

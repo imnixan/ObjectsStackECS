@@ -21,18 +21,20 @@ public class SpawnPancakesSystem : IEcsInitSystem, IEcsRunSystem
         _lastTime += Time.deltaTime;
         if (_lastTime > _spawnDelay)
         {
-            var xRange = _sceneData.Asset.PancakesXSpawnRange;
-            var zRange = _sceneData.Asset.PancakesZSpawnRange;
+            var range = _sceneData.Asset.PancakesSpawnRange;
+            var spawnPoint = _sceneData.PancakesSpawnPoint;
             _world.NewEntity().Get<SpawnPrefab>() = new SpawnPrefab
             {
                 Prefab = _prefab,
-                Position = new Vector3(
-                    Random.Range(xRange.min, xRange.max),
-                    0.5f,
-                    Random.Range(zRange.min, zRange.max)
-                ),
+                Position =
+                    spawnPoint.position
+                    + new Vector3(
+                        Utils.GetRandomInMinMaxRange(range.min, range.max),
+                        0.5f,
+                        Utils.GetRandomInMinMaxRange(range.min, range.max)
+                    ),
                 Rotation = Quaternion.identity,
-                Parent = _sceneData.PancakesParent
+                Parent = spawnPoint
             };
             _lastTime -= _spawnDelay;
         }
