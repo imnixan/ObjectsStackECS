@@ -1,7 +1,6 @@
 ﻿using System;
 using Leopotam.Ecs;
 using UnityEngine;
-using UnityEngine;
 
 public class UnloadSystem : IEcsRunSystem
 {

@@ -19,11 +19,13 @@ public class RemovePancakeSystem : IEcsRunSystem
             ref var entity = ref _playersFilter.GetEntity(index);
             var removeCount = entity.Get<StackRemoveEvent>().count;
             var pan = entity.Get<Pan>().pan;
-            float yPos = 0.5f;
-            Debug.Log($"remove {removeCount} pancakes in moment");
+
+            var entityGameObject = entity.Get<GameObjectLink>().Value;
+            var effect = entityGameObject.GetComponentInChildren<ParticleSystem>();
             for (int i = 0; i < removeCount; i++)
             {
                 GameObject.Destroy(pan.GetChild(i).gameObject);
+                effect.Play();
             }
         }
     }

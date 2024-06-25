@@ -6,7 +6,6 @@ public class OnCollisionEnterMonoLink : PhysicsLinkBase
 {
     private void OnCollisionEnter(Collision other)
     {
-        Debug.Log("COllision");
         _entity.Get<OnCollisionEnterEvent>() = new OnCollisionEnterEvent()
         {
             Collision = other,

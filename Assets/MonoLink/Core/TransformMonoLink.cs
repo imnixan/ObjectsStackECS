@@ -1,15 +1,12 @@
 ﻿using System;
+using Leopotam.Ecs;
 using UnityEngine;
 
 public class TransformMonoLink : MonoLink<TransformLink>
 {
-#if UNITY_EDITOR
-    private void OnValidate()
+    public override void Make(ref EcsEntity entity)
     {
-        if (Value.Value == null)
-        {
-            Value = new TransformLink { Value = GetComponent<Transform>() };
-        }
+        var transformLink = new TransformLink { Value = transform };
+        entity.Get<TransformLink>() = transformLink;
     }
-#endif
 }

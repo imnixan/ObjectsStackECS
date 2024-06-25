@@ -19,10 +19,12 @@ public class SpawnPancakesSystem : IEcsInitSystem, IEcsRunSystem
     public void Run()
     {
         _lastTime += Time.deltaTime;
-        if (_lastTime > _spawnDelay)
+        var spawnPoint = _sceneData.PancakesSpawnPoint;
+        int pancakesCreated = spawnPoint.childCount;
+        int maxPankaces = _sceneData.Asset.MaxPancakesSpawn;
+        if (_lastTime > _spawnDelay && pancakesCreated < maxPankaces)
         {
             var range = _sceneData.Asset.PancakesSpawnRange;
-            var spawnPoint = _sceneData.PancakesSpawnPoint;
             _world.NewEntity().Get<SpawnPrefab>() = new SpawnPrefab
             {
                 Prefab = _prefab,

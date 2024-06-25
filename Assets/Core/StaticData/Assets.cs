@@ -15,6 +15,8 @@ public class Assets : ScriptableObject
     public GameObject PancakeStackPrefab;
 
     public Range PancakesSpawnRange;
+
+    public int MaxPancakesSpawn = 100;
 }
 
 [Serializable]

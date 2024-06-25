@@ -19,15 +19,4 @@ public class PositionMonoLink : MonoLink<Position>
             base.Make(ref entity);
         }
     }
-
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (ConvertScenePositionToThis)
-        {
-            Value.World = transform.position;
-            Value.Local = transform.localPosition;
-        }
-    }
-#endif
 }

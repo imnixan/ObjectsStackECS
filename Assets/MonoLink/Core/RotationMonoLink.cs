@@ -19,15 +19,4 @@ public class RotationMonoLink : MonoLink<Rotation>
             base.Make(ref entity);
         }
     }
-
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (ConvertScenePositionToThis)
-        {
-            Value.World = transform.rotation;
-            Value.Local = transform.localRotation;
-        }
-    }
-#endif
 }
