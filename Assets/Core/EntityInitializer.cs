@@ -5,27 +5,25 @@ public static class EntityInitializer
 {
     public static void InitializeEntities(EcsWorld world)
     {
-        var playerMonoLink = Object.FindObjectOfType<PlayerTagMonoLink>();
-        var joystickMonoLink = Object.FindObjectOfType<JoystickMonoLink>();
+        InitializeEntity<PlayerTagMonoLink>(world);
+        InitializeEntity<JoystickMonoLink>(world);
+        InitializeEntity<CameraTagMonoLink>(world);
+    }
 
-        if (playerMonoLink != null)
-        {
-            var playerEntity = world.NewEntity();
-            playerMonoLink.Make(ref playerEntity);
-        }
-        else
-        {
-            Debug.LogWarning("PlayerMonoLink not found!");
-        }
+    private static void InitializeEntity<T>(EcsWorld world)
+        where T : MonoLinkBase
+    {
+        var monoLinks = Object.FindObjectsOfType<T>();
 
-        if (joystickMonoLink != null)
+        foreach (var monoLink in monoLinks)
         {
-            var joystickEntity = world.NewEntity();
-            joystickMonoLink.Make(ref joystickEntity);
-        }
-        else
-        {
-            Debug.LogWarning("JoystickMonoLink not found!");
+            var entity = world.NewEntity();
+            var monoLinkComponents = monoLink.GetComponents<MonoLinkBase>();
+
+            foreach (var component in monoLinkComponents)
+            {
+                component.Make(ref entity);
+            }
         }
     }
 }

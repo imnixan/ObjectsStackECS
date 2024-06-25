@@ -1,4 +1,6 @@
 using Leopotam.Ecs;
+using Leopotam.Ecs.Ui.Components;
+using Leopotam.Ecs.Ui.Systems;
 using UnityEngine;
 
 namespace Client
@@ -8,6 +10,9 @@ namespace Client
         EcsWorld _world;
         EcsSystems _updateSystems;
         EcsSystems _fixedUpdateSystems;
+
+        [SerializeField]
+        private SceneData sceneData;
 
         void Start()
         {
@@ -19,13 +24,23 @@ namespace Client
 #if UNITY_EDITOR
             Leopotam.Ecs.UnityIntegration.EcsWorldObserver.Create(_world);
             Leopotam.Ecs.UnityIntegration.EcsSystemsObserver.Create(_updateSystems);
+            Leopotam.Ecs.UnityIntegration.EcsSystemsObserver.Create(_fixedUpdateSystems);
+
 #endif
             EntityInitializer.InitializeEntities(_world);
-            _updateSystems.Init();
+
+            _updateSystems
+                .Add(new PlayerInputSystem())
+                .Add(new CameraFollowPlayerSystem())
+                //.InjectUi(sceneData.uiEmitter)
+                //.OneFrame<EcsUiDragEvent>()
+                .Init();
 
             _fixedUpdateSystems
-                .Add(new PlayerInputSystem())
-                .Add(new UpdateRigidbodySystem())
+                .Add(new MoveRigidbodySystem())
+                .Add(new RotateRigidbodySystem())
+                .Add(new MoveTransformSystem())
+                .Add(new RotateTransformSystem())
                 .Init();
         }
 
@@ -47,6 +62,11 @@ namespace Client
                 _updateSystems = null;
                 _world.Destroy();
                 _world = null;
+            }
+
+            if (_fixedUpdateSystems != null)
+            {
+                _fixedUpdateSystems.Destroy();
             }
         }
     }

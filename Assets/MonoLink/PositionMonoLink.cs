@@ -8,7 +8,11 @@ public class PositionMonoLink : MonoLink<Position>
     {
         if (ConvertScenePositionToThis)
         {
-            entity.Get<Position>() = new Position { Value = transform.position };
+            entity.Get<Position>() = new Position
+            {
+                World = transform.position,
+                Local = transform.localPosition
+            };
         }
         else
         {
@@ -21,7 +25,8 @@ public class PositionMonoLink : MonoLink<Position>
     {
         if (ConvertScenePositionToThis)
         {
-            Value.Value = transform.position;
+            Value.World = transform.position;
+            Value.Local = transform.localPosition;
         }
     }
 #endif
