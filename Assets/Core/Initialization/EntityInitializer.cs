@@ -5,9 +5,7 @@ public static class EntityInitializer
 {
     public static void InitializeEntities(EcsWorld world)
     {
-        InitializeEntity<PlayerTagMonoLink>(world);
-        InitializeEntity<JoystickMonoLink>(world);
-        InitializeEntity<CameraTagMonoLink>(world);
+        InitializeEntity<GameObjectMonoLink>(world);
     }
 
     private static void InitializeEntity<T>(EcsWorld world)
@@ -18,7 +16,7 @@ public static class EntityInitializer
         foreach (var monoLink in monoLinks)
         {
             var entity = world.NewEntity();
-            var monoLinkComponents = monoLink.GetComponents<MonoLinkBase>();
+            var monoLinkComponents = monoLink.GetComponentsInChildren<MonoLinkBase>();
 
             foreach (var component in monoLinkComponents)
             {

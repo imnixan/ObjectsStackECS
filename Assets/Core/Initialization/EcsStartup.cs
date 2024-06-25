@@ -44,7 +44,13 @@ namespace Client
         {
             _playerSystems = new EcsSystems(_world)
                 .Add(new PlayerInputSystem())
-                .Add(new CameraFollowPlayerSystem());
+                .Add(new CameraFollowPlayerSystem())
+                .Add(new TryMoveToUnloadingZone())
+                .Add(new TryLeaveUnloadinZone())
+                .Add(new TryPickupItem())
+                .OneFrame<OnTriggerEnterEvent>()
+                .OneFrame<OnTriggerExitEvent>()
+                .OneFrame<OnCollisionEnterEvent>();
 
             _animationSystems = new EcsSystems(_world)
                 .Add(new AnimationMoveSystem())
@@ -60,7 +66,7 @@ namespace Client
 
         private void InitSystems()
         {
-            _updateSystems.Inject(sceneData).Add(_playerSystems).Init();
+            _updateSystems.Inject(sceneData).Add(_playerSystems).Add(new DestroySystem()).Init();
             _fixedUpdateSystems
                 .Inject(sceneData)
                 .Add(_moveSystems)

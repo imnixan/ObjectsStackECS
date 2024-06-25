@@ -19,7 +19,6 @@ public class AnimationPlaySystem : IEcsRunSystem
             ref var animator = ref entity.Get<AnimationLink>();
             if (!animator.Value.IsPlaying(animator.CurrentAnimation))
             {
-                Debug.Log($"play {animator.CurrentAnimation}");
                 animator.Value.Play(animator.CurrentAnimation);
             }
         }

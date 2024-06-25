@@ -28,7 +28,6 @@ public class PlayerInputSystem : IEcsRunSystem
 
             var directionMagnitude = direction.sqrMagnitude;
             speed.CurrentSpeed = speed.MaxSpeed * directionMagnitude;
-            Debug.Log("Current speed" + speed.CurrentSpeed);
             if (directionMagnitude > 0.01f)
             {
                 Quaternion newRotation = Quaternion.LookRotation(direction);
