@@ -1,49 +1,75 @@
 ﻿using Leopotam.Ecs;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PlayerInputSystem : IEcsRunSystem
 {
     private EcsWorld _world;
-    private SceneData _sceneData;
 
     private EcsFilter<PlayerTag, Position, Speed, Rotation> _playerFilter = null;
 
-    private EcsFilter<JoystickLink> _joystickFilter = null;
-
     public void Run()
     {
-        if (_playerFilter.IsEmpty() || _joystickFilter.IsEmpty())
+        if (_playerFilter.IsEmpty())
             return;
 
-        var joystick = _joystickFilter.Get1(0);
-        foreach (int index in _playerFilter)
+        Vector3 direction = Vector3.zero;
+
+        // Обработка ввода WASD
+        if (Input.GetKey(KeyCode.W))
         {
-            EcsEntity player = _playerFilter.GetEntity(index);
-            ref var position = ref player.Get<Position>();
-            ref var rotation = ref player.Get<Rotation>();
-            ref var speed = ref player.Get<Speed>();
+            direction += Vector3.forward;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            direction += Vector3.back;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            direction += Vector3.left;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            direction += Vector3.right;
+        }
 
-            Vector3 direction = new Vector3(joystick.Value.Horizontal, 0, joystick.Value.Vertical);
+        // Получаем позицию мыши на экране и вычисляем направление взгляда
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hitInfo))
+        {
+            Vector3 mousePosition = hitInfo.point;
 
-            var directionMagnitude = direction.sqrMagnitude;
-            speed.CurrentSpeed = speed.MaxSpeed * directionMagnitude;
-            if (directionMagnitude > 0.01f)
+            foreach (int index in _playerFilter)
             {
-                Quaternion newRotation = Quaternion.LookRotation(direction);
-                if (newRotation != rotation.World)
+                EcsEntity player = _playerFilter.GetEntity(index);
+                ref var position = ref player.Get<Position>();
+                ref var rotation = ref player.Get<Rotation>();
+                ref var speed = ref player.Get<Speed>();
+
+                // Движение игрока
+                float directionMagnitude = direction.sqrMagnitude;
+                speed.CurrentSpeed = speed.MaxSpeed * Mathf.Clamp01(directionMagnitude);
+
+                if (directionMagnitude > 0.01f)
                 {
-                    player.Get<RotateTag>();
-                    rotation.World = newRotation;
+                    Vector3 newPosition =
+                        position.World
+                        + direction.normalized * (speed.CurrentSpeed * Time.deltaTime);
+                    player.Get<MoveTag>();
+                    position.World = newPosition;
                 }
-            }
 
-            Vector3 newPosition =
-                position.World + direction * (speed.CurrentSpeed * Time.deltaTime);
-            if (directionMagnitude > 0.01f)
-            {
-                player.Get<MoveTag>();
-                position.World += direction * (speed.CurrentSpeed * Time.deltaTime);
+                // Направление взгляда в сторону курсора мыши
+                Vector3 lookDirection = mousePosition - position.World;
+                lookDirection.y = 0; // Игнорируем ось Y, чтобы игрок не смотрел вверх или вниз
+                if (lookDirection.sqrMagnitude > 0.01f)
+                {
+                    Quaternion newRotation = Quaternion.LookRotation(lookDirection);
+                    if (newRotation != rotation.World)
+                    {
+                        player.Get<RotateTag>();
+                        rotation.World = newRotation;
+                    }
+                }
             }
         }
     }

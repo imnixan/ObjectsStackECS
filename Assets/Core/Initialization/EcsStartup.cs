@@ -45,19 +45,11 @@ namespace Client
 
         private void BuildSystems()
         {
-            _worldSystem = new EcsSystems(_world)
-                .Add(new SpawnSystem())
-                .Add(new SpawnPancakesSystem());
+            _worldSystem = new EcsSystems(_world).Add(new SpawnSystem());
 
             _playerSystems = new EcsSystems(_world)
                 .Add(new CameraFollowPlayerSystem())
-                .Add(new TryMoveToUnloadingZone())
-                .Add(new TryLeaveUnloadinZone())
-                .Add(new TryPickupItem())
-                .Add(new AddPancakeSystem())
                 .OneFrame<StackAddEvent>()
-                .Add(new UnloadSystem())
-                .Add(new RemovePancakeSystem())
                 .OneFrame<StackRemoveEvent>()
                 .OneFrame<OnTriggerEnterEvent>()
                 .OneFrame<OnTriggerExitEvent>()
@@ -74,7 +66,7 @@ namespace Client
                 .Add(new MoveTransformSystem())
                 .Add(new RotateTransformSystem());
 
-            _uiSystem = new EcsSystems(_world).Inject(uiData).Add(new UiStackCountSystem());
+            _uiSystem = new EcsSystems(_world).Inject(uiData);
         }
 
         private void InitSystems()
